@@ -44,3 +44,8 @@ Thumbs.db
 # IDE/editor temporary files
 .vscode/
 .idea/
+
+# Qt Creator / CMake
+CMakeLists.txt.user*
+build/
+build-*/
