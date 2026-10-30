@@ -13,6 +13,8 @@ include_directories(include)
 
 add_executable(AteneaEnElDorado
     src/main.cpp
+    src/atenea.cpp
+    include/atenea.h
 )
 
 target_link_libraries(AteneaEnElDorado PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
