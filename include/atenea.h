@@ -5,20 +5,6 @@ enum class Direccion { Izquierda, Derecha };
 
 class Atenea
 {
-public:
-    Atenea(float x, float y);
-
-    void mover(Direccion direccion);
-    void saltar();
-    void agacharse();
-    void levantarse();
-    void recogerObjeto();
-    void actualizar();
-
-    float getX() const;
-    float getY() const;
-    Estado getEstado() const;
-    int getObjetosRecogidos() const;
 
 private:
     float x;
@@ -26,5 +12,25 @@ private:
     float velocidad;
     float velocidadY;
     Estado estado;
-    int objetosRecogidos;
+    int oroRecogido;
+    bool tieneLlave;
+
+public:
+    Atenea(float x, float y);
+
+    void mover(Direccion direccion);
+    void saltar();
+    void agacharse();
+    void levantarse();
+    void recogerOro();
+    void actualizar();
+
+    float getX() const;
+    float getY() const;
+    Estado getEstado() const;
+    int getOroRecogido() const;
+    void recogerLlave();
+    bool getTieneLlave() const;
+
+
 };

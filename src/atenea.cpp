@@ -7,7 +7,7 @@ static const float SUELO_Y = 300.0f;     // altura del suelo (temporal, luego la
 
 Atenea::Atenea(float x, float y)
     : x(x), y(y), velocidad(5.0f), velocidadY(0.0f),
-    estado(Estado::DePie), objetosRecogidos(0)
+    estado(Estado::DePie), oroRecogido(0), tieneLlave(false)
 {
 }
 
@@ -43,10 +43,16 @@ void Atenea::levantarse()
         estado = Estado::DePie;
 }
 
-void Atenea::recogerObjeto()
+void Atenea::recogerOro()
 {
-    objetosRecogidos++;
+    oroRecogido++;
 }
+
+void Atenea::recogerLlave()
+{
+    tieneLlave = true;
+}
+
 
 void Atenea::actualizar()
 {
@@ -67,4 +73,5 @@ void Atenea::actualizar()
 float Atenea::getX() const { return x; }
 float Atenea::getY() const { return y; }
 Estado Atenea::getEstado() const { return estado; }
-int Atenea::getObjetosRecogidos() const { return objetosRecogidos; }
+int Atenea::getOroRecogido() const { return oroRecogido; }
+bool Atenea::getTieneLlave() const { return tieneLlave; }
