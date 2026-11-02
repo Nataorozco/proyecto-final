@@ -1,4 +1,5 @@
 #include "vistajuego.h"
+#include <QTransform>
 
 VistaJuego::VistaJuego()
 {
@@ -17,14 +18,120 @@ VistaJuego::VistaJuego()
 
     atenea = new Atenea(100.0f, 400.0f);
 
-    QPixmap sprite(QString(RUTA_ASSETS) + "/sprites/nivel-1/atenea_de_pie.png");
-    sprite = sprite.scaledToHeight(120);
-    dibujoAtenea = escena->addPixmap(sprite);
-    dibujoAtenea->setPos(atenea->getX() - sprite.width() / 2,
-                         atenea->getY() - sprite.height());
+    QPixmap original(QString(RUTA_ASSETS) + "/sprites/nivel-1/atenea_de_pie.png");
+    escalaSprites = 120.0 / original.height();
+
+    spriteDePie = cargarSprite("atenea_de_pie.png");
+    spriteCaminar1 = cargarSprite("atenea_caminar_1.png");
+    spriteCaminar2 = cargarSprite("atenea_caminar_2.png");
+    spriteAgachada = cargarSprite("atenea_agachada.png");
+    spriteSaltar = cargarSprite("atenea_saltar.png");
+
+    dibujoAtenea = escena->addPixmap(spriteDePie);
+    dibujoAtenea->setPos(atenea->getX() - spriteDePie.width() / 2,
+                         atenea->getY() - spriteDePie.height());
+
+    izquierdaPulsada = false;
+    derechaPulsada = false;
+    contadorAnimacion = 0;
+    mirandoDerecha = true;
+
+    // crea el reloj del juego
+    temporalizador = new QTimer(this);
+    // cada vez que el reloj suena, llama a actualizar el juego
+    connect(temporalizador,&QTimer::timeout, this, &VistaJuego::actualizarJuego);
+    // el reloj suena cada 16 milisegundos (unas 60 veces por segundo
+    temporalizador->start(16);
+    // pide el foco para recibir el teclado
+    setFocus();
 }
 
 VistaJuego::~VistaJuego()
 {
     delete atenea;
+}
+// se ejecuta cada 16ms
+void VistaJuego::actualizarJuego()
+{
+    if (derechaPulsada)
+        atenea->mover(Direccion::Derecha);
+    else if (izquierdaPulsada)
+        atenea->mover(Direccion::Izquierda);
+    else if (atenea->getEstado() == Estado::Caminando)
+        atenea->levantarse();
+    //avanza el salto y los temporalizadores (0.16 s = 16 ms)
+    atenea->actualizar(0.016f);
+    contadorAnimacion++;
+    actualizarSprite();
+    dibujoAtenea->setPos(atenea->getX() - dibujoAtenea->pixmap().width() / 2,
+                         atenea->getY() - dibujoAtenea->pixmap().height());
+
+}
+// cuando se presiona una tecla
+void VistaJuego::keyPressEvent(QKeyEvent *evento)
+{
+    if (evento->isAutoRepeat()) //ignora la repeticion automatica
+        return;
+    if (evento->key() == Qt::Key_Left)
+    {
+        izquierdaPulsada = true;
+        mirandoDerecha = false;
+    }
+    else if (evento->key() == Qt::Key_Right)
+        {
+        derechaPulsada = true;
+        mirandoDerecha = true;
+        }
+    else if (evento->key() == Qt::Key_Space)
+        atenea->saltar();
+    else if (evento->key() == Qt::Key_Down)
+        atenea->agacharse();
+}
+// cuando se suelta la tecla
+void VistaJuego::keyReleaseEvent(QKeyEvent *evento)
+{
+    if (evento->isAutoRepeat()) //ignora la repeticion automatica
+        return;
+    if (evento->key() == Qt::Key_Left)
+        izquierdaPulsada = false;
+    else if (evento->key() == Qt::Key_Right)
+        derechaPulsada = false;
+    else if (evento->key() == Qt::Key_Down)
+        atenea->levantarse();
+}
+QPixmap VistaJuego::cargarSprite(const QString &nombre)
+{
+    QPixmap original(QString(RUTA_ASSETS) + "/sprites/nivel-1/" + nombre);
+    return original.scaled(static_cast<int>(original.width() * escalaSprites),
+                           static_cast<int>(original.height() * escalaSprites));
+}
+
+void VistaJuego::actualizarSprite()
+{
+    QPixmap dibujo;
+
+    switch (atenea->getEstado())
+    {
+    case Estado::DePie:
+        dibujo = spriteDePie;
+        break;
+    case Estado::Caminando:
+        // alterna entre los dos dibujos cada 10 vueltas (unos 0.16 s)
+        if ((contadorAnimacion / 10) % 2 == 0)
+            dibujo = spriteCaminar1;
+        else
+            dibujo = spriteCaminar2;
+        break;
+    case Estado::Agachada:
+        dibujo = spriteAgachada;
+        break;
+    case Estado::Saltando:
+        dibujo = spriteSaltar;
+        break;
+    }
+
+    if (!mirandoDerecha)
+        dibujo = dibujo.transformed(QTransform().scale(-1, 1));   // voltea de izquierda a derecha
+
+    dibujoAtenea->setPixmap(dibujo);
 }

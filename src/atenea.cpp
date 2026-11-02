@@ -3,7 +3,7 @@
 // Valores de prueba. Se ajustan al probar el juego.
 static const float GRAVEDAD = 0.5f;      // cuanto aumenta la velocidad hacia abajo en cada vuelta
 static const float FUERZA_SALTO = -10.0f; // negativo = hacia arriba (en pantalla y crece hacia abajo)
-static const float SUELO_Y = 300.0f;// altura del suelo (temporal, luego la dara el nivel)
+static const float SUELO_Y = 400.0f;// altura del suelo (temporal, luego la dara el nivel)
 static const float DURACION_ORO = 5.0f;
 static const float FACTOR_LENTO = 0.5f;
 
