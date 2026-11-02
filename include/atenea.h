@@ -14,6 +14,8 @@ private:
     Estado estado;
     int oroRecogido;
     bool tieneLlave;
+    float tiempoOro;
+    float tiempoLento;
 
 public:
     Atenea(float x, float y);
@@ -23,7 +25,8 @@ public:
     void agacharse();
     void levantarse();
     void recogerOro();
-    void actualizar();
+    void actualizar(float dt);
+    void ralentizar(float segundos);
 
     float getX() const;
     float getY() const;
@@ -34,3 +37,5 @@ public:
 
 
 };
+
+
