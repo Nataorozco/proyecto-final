@@ -1,14 +1,14 @@
 #include <QApplication>
-#include <QWidget>
+#include "vistajuego.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QWidget ventana;
-    ventana.setWindowTitle("Atenea en El Dorado");
-    ventana.resize(800, 450);
-    ventana.show();
+    VistaJuego vista;
+    vista.setWindowTitle("Atenea en El Dorado");
+    vista.show();
 
     return app.exec();
 }
+

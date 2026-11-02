@@ -15,6 +15,11 @@ add_executable(AteneaEnElDorado
     src/main.cpp
     src/atenea.cpp
     include/atenea.h
+    include/vistajuego.h
+
+
+    src/vistajuego.cpp
 )
 
 target_link_libraries(AteneaEnElDorado PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_compile_definitions(AteneaEnElDorado PRIVATE RUTA_ASSETS="${CMAKE_SOURCE_DIR}/assets")
