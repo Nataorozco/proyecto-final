@@ -25,6 +25,7 @@ public:
     void agacharse();
     void levantarse();
     void recogerOro();
+    void limitarX(float minimo, float maximo);
     void actualizar(float dt);
     void ralentizar(float segundos);
 

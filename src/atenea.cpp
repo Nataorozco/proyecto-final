@@ -61,6 +61,14 @@ void Atenea::recogerLlave()
     tieneLlave = true;
 }
 
+void Atenea::limitarX(float minimo, float maximo)
+{
+    if (x < minimo)
+        x = minimo;
+    if (x > maximo)
+        x = maximo;
+}
+
 void Atenea::ralentizar(float segundos)
 {
     tiempoLento = segundos;

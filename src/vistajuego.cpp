@@ -1,5 +1,8 @@
 #include "vistajuego.h"
 #include <QTransform>
+#include <QTransform>
+
+static const int ANCHO_NIVEL = 3000;
 
 VistaJuego::VistaJuego()
 {
@@ -13,8 +16,15 @@ VistaJuego::VistaJuego()
 
     QPixmap fondo(QString(RUTA_ASSETS) + "/sprites/nivel-1/fondo.png");
     fondo = fondo.scaledToHeight(450);
-    escena->addPixmap(fondo);
-    escena->setSceneRect(0, 0, fondo.width(), 450);
+    QPixmap fondoEspejo = fondo.transformed(QTransform().scale(-1, 1));
+
+    int copias = ANCHO_NIVEL / fondo.width() + 1;
+    for (int i = 0; i < copias; i++)
+    {
+        QGraphicsPixmapItem *trozo = escena->addPixmap(i % 2 == 0 ? fondo : fondoEspejo);
+        trozo->setPos(i * fondo.width(), 0);
+    }
+    escena->setSceneRect(0, 0, ANCHO_NIVEL, 450);
 
     atenea = new Atenea(100.0f, 400.0f);
 
@@ -61,10 +71,12 @@ void VistaJuego::actualizarJuego()
         atenea->levantarse();
     //avanza el salto y los temporalizadores (0.16 s = 16 ms)
     atenea->actualizar(0.016f);
+    atenea->limitarX(40.0f, ANCHO_NIVEL - 40.0f);
     contadorAnimacion++;
     actualizarSprite();
     dibujoAtenea->setPos(atenea->getX() - dibujoAtenea->pixmap().width() / 2,
                          atenea->getY() - dibujoAtenea->pixmap().height());
+    centerOn(dibujoAtenea);
 
 }
 // cuando se presiona una tecla
