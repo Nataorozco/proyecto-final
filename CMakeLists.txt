@@ -15,10 +15,11 @@ add_executable(AteneaEnElDorado
     src/main.cpp
     src/atenea.cpp
     include/atenea.h
-    include/vistajuego.h
-
-
     src/vistajuego.cpp
+    include/vistajuego.h
+    src/objeto.cpp
+    include/objeto.h
+
 )
 
 target_link_libraries(AteneaEnElDorado PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

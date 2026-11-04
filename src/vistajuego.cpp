@@ -25,6 +25,23 @@ VistaJuego::VistaJuego()
         trozo->setPos(i * fondo.width(), 0);
     }
     escena->setSceneRect(0, 0, ANCHO_NIVEL, 450);
+    // objetos del nivel1 (temporal: luego los creara Nivel1)
+    objetos.push_back(new Objeto(700.0f, 400.0f, TipoObjeto::Oro));
+    objetos.push_back(new Objeto(2800.0f, 400.0f, TipoObjeto::Llave));
+
+    for (Objeto *objeto : objetos)
+    {
+        QPixmap dibujo;
+        if (objeto->getTipo() == TipoObjeto::Llave)
+            dibujo = QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-1/llave.png").scaledToHeight(100);
+        else
+            dibujo = QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-1/oro.png").scaledToHeight(80);
+
+        QGraphicsPixmapItem *item = escena->addPixmap(dibujo);
+        item->setPos(objeto->getX() - dibujo.width() / 2,
+                     objeto->getY() -dibujo.height());
+        dibujosObjetos.push_back(item);
+    }
 
     atenea = new Atenea(100.0f, 400.0f);
 
@@ -59,6 +76,8 @@ VistaJuego::VistaJuego()
 VistaJuego::~VistaJuego()
 {
     delete atenea;
+    for (Objeto *objeto : objetos)
+        delete objeto;
 }
 // se ejecuta cada 16ms
 void VistaJuego::actualizarJuego()

@@ -7,6 +7,8 @@
 #include "atenea.h"
 #include <QTimer>
 #include <QKeyEvent>
+#include <vector>
+#include "objeto.h"
 
 class VistaJuego :public QGraphicsView
 {
@@ -32,6 +34,8 @@ private:
     float escalaSprites;
     int contadorAnimacion;
     bool mirandoDerecha;
+    std::vector<Objeto*> objetos;
+    std::vector<QGraphicsPixmapItem*> dibujosObjetos;
 
 protected:
     void keyPressEvent(QKeyEvent *evento) override;
