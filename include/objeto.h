@@ -1,5 +1,5 @@
 #pragma once
-
+class Atenea;
 enum class TipoObjeto { Llave, Oro };
 
 class Objeto
@@ -18,4 +18,5 @@ public:
     TipoObjeto getTipo() const;
     float getX() const;
     float getY() const;
+    bool colisionaCon(const Atenea &atenea) const;
 };

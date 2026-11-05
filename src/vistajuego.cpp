@@ -91,6 +91,27 @@ void VistaJuego::actualizarJuego()
     //avanza el salto y los temporalizadores (0.16 s = 16 ms)
     atenea->actualizar(0.016f);
     atenea->limitarX(40.0f, ANCHO_NIVEL - 40.0f);
+
+    for (size_t i = 0; i < objetos.size(); i++)
+    {
+        Objeto *objeto = objetos[i];
+        if (!objeto->estaRecogido() && objeto->colisionaCon(*atenea))
+        {
+            objeto->recoger();
+
+            if (objeto->getTipo() == TipoObjeto::Oro)
+                atenea->recogerOro();
+            else
+                atenea->recogerLlave();
+
+            dibujosObjetos[i]->setVisible(false);
+
+            setWindowTitle(QString("Atenea en El Dorado - Oro: %1 Llave: %2")
+                               .arg(atenea->getOroRecogido())
+                               .arg(QString(atenea->getTieneLlave() ? "si" : "no")));
+        }
+    }
+
     contadorAnimacion++;
     actualizarSprite();
     dibujoAtenea->setPos(atenea->getX() - dibujoAtenea->pixmap().width() / 2,
