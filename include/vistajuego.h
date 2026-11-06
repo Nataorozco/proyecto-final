@@ -9,6 +9,8 @@
 #include <QKeyEvent>
 #include <vector>
 #include "objeto.h"
+#include <QGraphicsLineItem>
+#include "enredadera.h"
 
 class VistaJuego :public QGraphicsView
 {
@@ -36,6 +38,10 @@ private:
     bool mirandoDerecha;
     std::vector<Objeto*> objetos;
     std::vector<QGraphicsPixmapItem*> dibujosObjetos;
+    std::vector<Obstaculo*> obstaculos;
+    Enredadera *liana;
+    QGraphicsPixmapItem *dibujoLiana;
+    float tiempo;
 
 protected:
     void keyPressEvent(QKeyEvent *evento) override;

@@ -19,6 +19,10 @@ add_executable(AteneaEnElDorado
     include/vistajuego.h
     src/objeto.cpp
     include/objeto.h
+    src/obstaculo.cpp
+    include/obstaculo.h
+    src/enredadera.cpp
+    include/enredadera.h
 
 )
 
