@@ -1,5 +1,7 @@
 #pragma once
 
+class Atenea;
+
 class Obstaculo
 {
 protected:
@@ -16,4 +18,6 @@ public:
 
     float getX() const;
     float getY() const;
+
+    bool colisionaCon(const Atenea& atenea) const;
 };

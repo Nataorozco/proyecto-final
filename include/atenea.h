@@ -28,6 +28,7 @@ public:
     void limitarX(float minimo, float maximo);
     void actualizar(float dt);
     void ralentizar(float segundos);
+    void empujar(float dx);
 
     float getX() const;
     float getY() const;

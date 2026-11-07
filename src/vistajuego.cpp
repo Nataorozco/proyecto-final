@@ -1,3 +1,4 @@
+
 #include "vistajuego.h"
 #include <QTransform>
 #include <QTransform>
@@ -141,6 +142,21 @@ void VistaJuego::actualizarJuego()
     float largo = liana->getY() - liana->getYAnclaje();
     float angulo = std::atan2(dx, largo) * 180.0f / 3.14159f;
     dibujoLiana->setRotation(-angulo);
+
+    for (size_t i = 0; i < obstaculos.size(); i ++)
+    {
+        if (obstaculos[i]->colisionaCon(*atenea))
+        {
+
+            // Atenea sale rechazada hacia el lado de donde venia
+            if (atenea->getX() < obstaculos[i]->getX())
+                atenea->empujar(-8.0f);
+            else
+                atenea->empujar(8.0f);
+
+        }
+
+    }
 
     contadorAnimacion++;
     actualizarSprite();

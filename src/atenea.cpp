@@ -74,6 +74,12 @@ void Atenea::ralentizar(float segundos)
     tiempoLento = segundos;
 }
 
+void Atenea::empujar(float dx)
+{
+    x += dx;
+}
+
+
 void Atenea::actualizar(float dt)
 {
     if (tiempoOro > 0.0f)   tiempoOro   -= dt;
