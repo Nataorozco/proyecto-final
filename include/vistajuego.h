@@ -11,6 +11,7 @@
 #include "objeto.h"
 #include <QGraphicsLineItem>
 #include "enredadera.h"
+#include "nivel1.h"
 
 class VistaJuego :public QGraphicsView
 {
@@ -36,12 +37,12 @@ private:
     float escalaSprites;
     int contadorAnimacion;
     bool mirandoDerecha;
-    std::vector<Objeto*> objetos;
+
+    Nivel1 *nivel;
     std::vector<QGraphicsPixmapItem*> dibujosObjetos;
-    std::vector<Obstaculo*> obstaculos;
     Enredadera *liana;
     QGraphicsPixmapItem *dibujoLiana;
-    float tiempo;
+
 
 protected:
     void keyPressEvent(QKeyEvent *evento) override;

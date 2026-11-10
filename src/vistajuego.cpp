@@ -1,4 +1,3 @@
-
 #include "vistajuego.h"
 #include <QTransform>
 #include <QTransform>
@@ -27,9 +26,11 @@ VistaJuego::VistaJuego()
         trozo->setPos(i * fondo.width(), 0);
     }
     escena->setSceneRect(0, 0, ANCHO_NIVEL, 450);
+    atenea = new Atenea(100.0f, 400.0f);
+    nivel = new Nivel1(atenea);
     // objetos del nivel1 (temporal: luego los creara Nivel1)
-    objetos.push_back(new Objeto(700.0f, 400.0f, TipoObjeto::Oro));
-    objetos.push_back(new Objeto(2800.0f, 400.0f, TipoObjeto::Llave));
+
+    const std::vector<Objeto*>& objetos = nivel->getObjetos();
 
     for (Objeto *objeto : objetos)
     {
@@ -45,7 +46,7 @@ VistaJuego::VistaJuego()
         dibujosObjetos.push_back(item);
     }
 
-    atenea = new Atenea(100.0f, 400.0f);
+
 
     QPixmap original(QString(RUTA_ASSETS) + "/sprites/nivel-1/atenea_de_pie.png");
     escalaSprites = 120.0 / original.height();
@@ -62,8 +63,7 @@ VistaJuego::VistaJuego()
     dibujoArbol->setPos(1500 - arbol.width() / 2, 400 - arbol.height());
     dibujoArbol->setZValue(0.2);
 
-    liana = new Enredadera(1900.0f, 0.0f, 300.0f, 120.0f, 2.0f);
-    obstaculos.push_back(liana);//upcast: Enredadera* se convierte en obstaculo*
+    liana = nivel->getLiana();
 
     QPixmap spriteLiana = cargarSprite("liana.png");
     spriteLiana = spriteLiana.scaledToHeight(310, Qt::SmoothTransformation);
@@ -71,7 +71,6 @@ VistaJuego::VistaJuego()
     dibujoLiana->setTransformOriginPoint(spriteLiana.width() / 2.0f, 0);
     dibujoLiana->setPos(liana->getX0() - spriteLiana.width() / 2.0f, liana->getYAnclaje());
     dibujoLiana->setZValue(0.3);
-    tiempo = 0.0f;
 
     dibujoAtenea = escena->addPixmap(spriteDePie);
     dibujoAtenea->setZValue(1);
@@ -95,11 +94,8 @@ VistaJuego::VistaJuego()
 
 VistaJuego::~VistaJuego()
 {
+    delete nivel;
     delete atenea;
-    for (Objeto *objeto : objetos)
-        delete objeto;
-    for (Obstaculo *obstaculo : obstaculos)
-        delete obstaculo;
 }
 // se ejecuta cada 16ms
 void VistaJuego::actualizarJuego()
@@ -112,57 +108,28 @@ void VistaJuego::actualizarJuego()
         atenea->levantarse();
     //avanza el salto y los temporalizadores (0.16 s = 16 ms)
     atenea->actualizar(0.016f);
-    atenea->limitarX(40.0f, ANCHO_NIVEL - 40.0f);
+    nivel->actualizar(0.016f);
 
+    const std::vector<Objeto*>& objetos = nivel->getObjetos();
     for (size_t i = 0; i < objetos.size(); i++)
     {
-        Objeto *objeto = objetos[i];
-        if (!objeto->estaRecogido() && objeto->colisionaCon(*atenea))
-        {
-            objeto->recoger();
-
-            if (objeto->getTipo() == TipoObjeto::Oro)
-                atenea->recogerOro();
-            else
-                atenea->recogerLlave();
-
-            dibujosObjetos[i]->setVisible(false);
-
-            setWindowTitle(QString("Atenea en El Dorado - Oro: %1 Llave: %2")
-                               .arg(atenea->getOroRecogido())
-                               .arg(QString(atenea->getTieneLlave() ? "si" : "no")));
-        }
+        if (objetos[i]->estaRecogido())
+            dibujosObjetos[i]->hide();
     }
-
-    tiempo += 0.016f;
-    for (Obstaculo *obstaculo : obstaculos)
-        obstaculo->actualizar(tiempo); //polimorfismo
+    setWindowTitle(QString("Atenea en El Dorado - Oro: %1 Llave: %2")
+                .arg(atenea->getOroRecogido())
+               .arg(QString(atenea->getTieneLlave() ? "si" : "no")));
 
     float dx = liana->getX() - liana->getX0();
     float largo = liana->getY() - liana->getYAnclaje();
-    float angulo = std::atan2(dx, largo) * 180.0f / 3.14159f;
+    float angulo = std::asin(dx / largo) * 180.0f / 3.14159f;
     dibujoLiana->setRotation(-angulo);
-
-    for (size_t i = 0; i < obstaculos.size(); i ++)
-    {
-        if (obstaculos[i]->colisionaCon(*atenea))
-        {
-
-            // Atenea sale rechazada hacia el lado de donde venia
-            if (atenea->getX() < obstaculos[i]->getX())
-                atenea->empujar(-8.0f);
-            else
-                atenea->empujar(8.0f);
-
-        }
-
-    }
 
     contadorAnimacion++;
     actualizarSprite();
     dibujoAtenea->setPos(atenea->getX() - dibujoAtenea->pixmap().width() / 2,
                          atenea->getY() - dibujoAtenea->pixmap().height());
-    centerOn(dibujoAtenea);
+    centerOn(nivel->getScrollX() + 400,225);
 
 }
 // cuando se presiona una tecla

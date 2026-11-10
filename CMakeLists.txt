@@ -23,6 +23,10 @@ add_executable(AteneaEnElDorado
     include/obstaculo.h
     src/enredadera.cpp
     include/enredadera.h
+    src/nivel.cpp
+    include/nivel.h
+    src/nivel1.cpp
+    include/nivel1.h
 
 )
 
