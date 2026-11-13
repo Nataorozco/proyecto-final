@@ -89,6 +89,26 @@ VistaJuego::VistaJuego()
     // el reloj suena cada 16 milisegundos (unas 60 veces por segundo
     temporalizador->start(16);
     // pide el foco para recibir el teclado
+
+    sonidoOro = new QSoundEffect(this);
+    sonidoOro->setSource(QUrl::fromLocalFile(QString(RUTA_ASSETS) + "/sounds/oro.wav"));
+    sonidoOro->setVolume(0.8f);
+    sonidoGolpe = new QSoundEffect(this);
+    sonidoGolpe->setSource(QUrl::fromLocalFile(QString(RUTA_ASSETS) + "/sounds/golpe.wav"));
+    sonidoGolpe->setVolume(0.8f);
+    enfriamientoGolpe = 0;
+
+    salidaAudio = new QAudioOutput(this);
+    salidaAudio->setVolume(0.4f);
+    musica = new QMediaPlayer(this);
+    musica->setAudioOutput(salidaAudio);
+    musica->setSource(QUrl::fromLocalFile(QString(RUTA_ASSETS) + "/sounds/fondo.wav"));
+    musica->setLoops(QMediaPlayer::Infinite);
+    musica->play();
+
+    oroAnterior = 0;
+
+
     setFocus();
 }
 
@@ -110,6 +130,19 @@ void VistaJuego::actualizarJuego()
     atenea->actualizar(0.016f);
     nivel->actualizar(0.016f);
 
+    if (atenea->getOroRecogido() > oroAnterior)
+        sonidoOro->play();
+    oroAnterior = atenea->getOroRecogido();
+
+    if (nivel->huboGolpe() && enfriamientoGolpe == 0)
+    {
+        sonidoGolpe->play();
+        enfriamientoGolpe = 20; // 30 vueltas = unos 0.5 s sin volver a sonar
+    }
+    if (enfriamientoGolpe > 0)
+        enfriamientoGolpe --;
+
+
     const std::vector<Objeto*>& objetos = nivel->getObjetos();
     for (size_t i = 0; i < objetos.size(); i++)
     {
@@ -130,6 +163,16 @@ void VistaJuego::actualizarJuego()
     dibujoAtenea->setPos(atenea->getX() - dibujoAtenea->pixmap().width() / 2,
                          atenea->getY() - dibujoAtenea->pixmap().height());
     centerOn(nivel->getScrollX() + 400,225);
+
+    if (nivel->estaCompletado())
+    {
+        temporalizador->stop(); // congela el juego
+        musica->stop();
+        QGraphicsTextItem *mensaje = escena->addText("¡Nivel 1 completado!", QFont("Arial", 28));
+        mensaje->setDefaultTextColor(Qt::black);
+        mensaje->setPos(nivel->getScrollX() + 210, 190); // en el centro de lo que se ve
+        mensaje->setZValue(30);                          //por encima de todo
+    }
 
 }
 // cuando se presiona una tecla

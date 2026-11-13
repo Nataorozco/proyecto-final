@@ -12,6 +12,9 @@
 #include <QGraphicsLineItem>
 #include "enredadera.h"
 #include "nivel1.h"
+#include <QSoundEffect>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 
 class VistaJuego :public QGraphicsView
 {
@@ -21,6 +24,12 @@ public:
     VistaJuego();
     ~VistaJuego();
 private:
+    QSoundEffect *sonidoOro;
+    QMediaPlayer *musica;
+    QAudioOutput *salidaAudio;
+    int oroAnterior;
+    QSoundEffect *sonidoGolpe;
+    int enfriamientoGolpe;
     QGraphicsScene *escena;
     QGraphicsPixmapItem *dibujoAtenea;
     Atenea *atenea;

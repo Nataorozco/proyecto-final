@@ -2,7 +2,7 @@
 #include "atenea.h"
 
 Nivel::Nivel(Atenea *atenea, float ancho)
-    : atenea(atenea), ancho(ancho), completado(false)
+    : atenea(atenea), ancho(ancho), completado(false), golpe(false)
 {
 }
 
@@ -32,10 +32,12 @@ void Nivel::revisarObjetos()
 
 void Nivel::revisarColisiones()
 {
+    golpe = false;
     for (size_t i = 0; i < obstaculos.size(); i++)
     {
         if (obstaculos[i]->colisionaCon(*atenea))
         {
+            golpe = true;
             if (atenea->getX() < obstaculos[i]->getX())
                 atenea->empujar(-8.0f);
             else
@@ -48,3 +50,4 @@ bool Nivel::estaCompletado() const { return completado; }
 float Nivel::getAncho() const { return ancho; }
 const std::vector<Objeto*>& Nivel::getObjetos() const { return objetos; }
 const std::vector<Obstaculo*>& Nivel::getObstaculos() const { return obstaculos; }
+bool Nivel::huboGolpe() const { return golpe; }

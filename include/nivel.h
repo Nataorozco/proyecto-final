@@ -19,6 +19,7 @@ public:
     float getAncho() const;
     const std::vector<Objeto*>& getObjetos() const;
     const std::vector<Obstaculo*>& getObstaculos() const;
+    bool huboGolpe() const;
 
 protected:
     void revisarObjetos();
@@ -29,6 +30,7 @@ protected:
     Atenea *atenea;
     float ancho;
     bool completado;
+    bool golpe;
 };
 
 #endif
