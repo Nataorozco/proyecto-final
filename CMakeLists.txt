@@ -27,6 +27,14 @@ add_executable(AteneaEnElDorado
     include/nivel.h
     src/nivel1.cpp
     include/nivel1.h
+    src/roca.cpp
+    include/roca.h
+    src/remolino.cpp
+    include/remolino.h
+    src/nivel2.cpp
+    include/nivel2.h
+    src/juego.cpp
+    include/juego.h
 
 )
 

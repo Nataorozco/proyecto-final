@@ -15,6 +15,7 @@
 #include <QSoundEffect>
 #include <QMediaPlayer>
 #include <QAudioOutput>
+#include "juego.h"
 
 class VistaJuego :public QGraphicsView
 {
@@ -32,6 +33,7 @@ private:
     int enfriamientoGolpe;
     QGraphicsScene *escena;
     QGraphicsPixmapItem *dibujoAtenea;
+    Juego *juego;
     Atenea *atenea;
     QTimer *temporalizador;
     bool izquierdaPulsada;
@@ -46,9 +48,11 @@ private:
     float escalaSprites;
     int contadorAnimacion;
     bool mirandoDerecha;
+    void cargarNivel2();
 
-    Nivel1 *nivel;
+    Nivel *nivel;
     std::vector<QGraphicsPixmapItem*> dibujosObjetos;
+    std::vector<QGraphicsPixmapItem*> dibujosObstaculos;
     Enredadera *liana;
     QGraphicsPixmapItem *dibujoLiana;
 

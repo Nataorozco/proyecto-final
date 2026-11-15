@@ -98,6 +98,16 @@ void Atenea::actualizar(float dt)
     }
 }
 
+void Atenea::prepararParaNivel(float nuevaX, float nuevaY)
+{
+    x = nuevaX;
+    y = nuevaY;
+    velocidadY = 0.0f;
+    estado = Estado::DePie;
+    tieneLlave = false; //la llave se uso en el nivel anterior
+    tiempoLento = 0.0f;
+}
+
 float Atenea::getX() const { return x; }
 float Atenea::getY() const { return y; }
 Estado Atenea::getEstado() const { return estado; }

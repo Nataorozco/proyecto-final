@@ -12,7 +12,7 @@ public:
     void actualizar(float dt) override;
     Enredadera* getLiana() const;
     void avanzarScroll();
-    float getScrollX() const;
+    float getScrollX() const override;
 
 private:
     Enredadera *liana;

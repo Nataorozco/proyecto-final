@@ -38,10 +38,7 @@ void Nivel::revisarColisiones()
         if (obstaculos[i]->colisionaCon(*atenea))
         {
             golpe = true;
-            if (atenea->getX() < obstaculos[i]->getX())
-                atenea->empujar(-8.0f);
-            else
-                atenea->empujar(8.0f);
+            obstaculos[i]->aplicarEfecto(*atenea); //cada objeto aplica su propio efecto
         }
     }
 }
@@ -51,3 +48,4 @@ float Nivel::getAncho() const { return ancho; }
 const std::vector<Objeto*>& Nivel::getObjetos() const { return objetos; }
 const std::vector<Obstaculo*>& Nivel::getObstaculos() const { return obstaculos; }
 bool Nivel::huboGolpe() const { return golpe; }
+float Nivel::getScrollX() const { return 0.0f; }; //por defecto, vista fija (sin scroll)

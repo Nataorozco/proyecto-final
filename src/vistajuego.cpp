@@ -1,6 +1,7 @@
 #include "vistajuego.h"
 #include <QTransform>
 #include <QTransform>
+#include "nivel.h"
 
 
 static const int ANCHO_NIVEL = 3000;
@@ -26,8 +27,11 @@ VistaJuego::VistaJuego()
         trozo->setPos(i * fondo.width(), 0);
     }
     escena->setSceneRect(0, 0, ANCHO_NIVEL, 450);
-    atenea = new Atenea(100.0f, 400.0f);
-    nivel = new Nivel1(atenea);
+    juego = new Juego();
+    atenea = juego->getAtenea();
+    nivel = juego->getNivelActual();
+    Nivel1 *nivel1 = dynamic_cast<Nivel1*>(nivel);
+
     // objetos del nivel1 (temporal: luego los creara Nivel1)
 
     const std::vector<Objeto*>& objetos = nivel->getObjetos();
@@ -63,7 +67,12 @@ VistaJuego::VistaJuego()
     dibujoArbol->setPos(1500 - arbol.width() / 2, 400 - arbol.height());
     dibujoArbol->setZValue(0.2);
 
-    liana = nivel->getLiana();
+   //constructor
+    Nivel1 *nivelUno = dynamic_cast<Nivel1*>(nivel1);
+    if (nivelUno != nullptr)
+    {
+        liana = nivelUno->getLiana();
+    }
 
     QPixmap spriteLiana = cargarSprite("liana.png");
     spriteLiana = spriteLiana.scaledToHeight(310, Qt::SmoothTransformation);
@@ -114,8 +123,7 @@ VistaJuego::VistaJuego()
 
 VistaJuego::~VistaJuego()
 {
-    delete nivel;
-    delete atenea;
+    delete juego; //juego d
 }
 // se ejecuta cada 16ms
 void VistaJuego::actualizarJuego()
@@ -152,13 +160,24 @@ void VistaJuego::actualizarJuego()
     setWindowTitle(QString("Atenea en El Dorado - Oro: %1 Llave: %2")
                 .arg(atenea->getOroRecogido())
                .arg(QString(atenea->getTieneLlave() ? "si" : "no")));
+    if (liana != nullptr)
+    {
 
-    float dx = liana->getX() - liana->getX0();
-    float largo = liana->getY() - liana->getYAnclaje();
-    float angulo = std::asin(dx / largo) * 180.0f / 3.14159f;
-    dibujoLiana->setRotation(-angulo);
+        float dx = liana->getX() - liana->getX0();
+        float largo = liana->getY() - liana->getYAnclaje();
+        float angulo = std::asin(dx / largo) * 180.0f / 3.14159f;
+        dibujoLiana->setRotation(-angulo);
+    }
+
+    const std::vector<Obstaculo*>& obstaculos = nivel->getObstaculos();
+    for (size_t i = 0; i < dibujosObstaculos.size(); i++)
+    {
+        dibujosObstaculos[i]->setPos(obstaculos[i]->getX() - dibujosObstaculos[i] -> pixmap().width() / 2,
+                              obstaculos[i]->getY() - dibujosObstaculos[i]->pixmap().height() / 2);
+    }
 
     contadorAnimacion++;
+
     actualizarSprite();
     dibujoAtenea->setPos(atenea->getX() - dibujoAtenea->pixmap().width() / 2,
                          atenea->getY() - dibujoAtenea->pixmap().height());
@@ -166,6 +185,12 @@ void VistaJuego::actualizarJuego()
 
     if (nivel->estaCompletado())
     {
+        if (juego->hayNivelSiguiente())
+        {
+            juego->siguienteNivel(); //juego nivel actual ++ y rehubica a Atenea
+            cargarNivel2();          // la vista dibuja el nivel nuevo
+            return;
+        }
         temporalizador->stop(); // congela el juego
         musica->stop();
         QGraphicsTextItem *mensaje = escena->addText("¡Nivel 1 completado!", QFont("Arial", 28));
@@ -243,3 +268,50 @@ void VistaJuego::actualizarSprite()
 
     dibujoAtenea->setPixmap(dibujo);
 }
+
+void VistaJuego::cargarNivel2()
+{
+    escena->clear();          //borra todos los dibujos del nivel 1
+    dibujosObjetos.clear();//esos punteros ya no existen
+    dibujosObstaculos.clear();
+    dibujoLiana = nullptr;
+    liana = nullptr;         //el nivel 2 no tiene liana
+
+    nivel = juego->getNivelActual(); // ahora apunta al nivel 2
+
+    QPixmap fondo(QString(RUTA_ASSETS) + "/sprites/nivel-2/fondo.png");
+    fondo = fondo.scaled(800, 450);
+    escena->addPixmap(fondo);
+    escena->setSceneRect(0, 0, 800, 450);
+
+    //objetos (oro == pato, llave): misma logica que el nivel1, otra carpeta
+    const std::vector<Objeto*>& objetos = nivel->getObjetos();
+    for (Objeto *objeto : objetos)
+    {
+        QPixmap dibujo;
+        if (objeto->getTipo() == TipoObjeto::Llave)
+            dibujo = QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-2/llave.png").scaledToHeight(100);
+        else
+            dibujo = QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-2/oro.png").scaledToHeight(80);
+        QGraphicsPixmapItem *item = escena->addPixmap(dibujo);
+        item->setPos(objeto->getX() - dibujo.width()/ 2,
+                     objeto->getY() - dibujo.height());
+        dibujosObjetos.push_back(item);
+    }
+    // Obstaculos (el remolino)
+    const std::vector<Obstaculo*>& obstaculos = nivel->getObstaculos();
+    for (Obstaculo *obstaculo : obstaculos)
+    {
+        QPixmap dibujo = QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-2/remolino.png").scaledToHeight(80);
+        QGraphicsPixmapItem *item = escena->addPixmap(dibujo);
+        item->setPos(obstaculo->getX() - dibujo.width()/ 2,
+                     obstaculo->getY() - dibujo.height()/2);
+        item->setZValue(0.5);
+        dibujosObstaculos.push_back(item);
+    }
+
+    dibujoAtenea = escena->addPixmap(spriteDePie);
+    dibujoAtenea->setZValue(1);
+}
+
+

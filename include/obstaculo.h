@@ -15,6 +15,7 @@ public:
     virtual ~Obstaculo();
 
     virtual void actualizar(float t) = 0;
+    virtual void aplicarEfecto(Atenea& atenea) = 0;
 
     float getX() const;
     float getY() const;

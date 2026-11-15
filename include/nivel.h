@@ -17,6 +17,7 @@ public:
 
     bool estaCompletado() const;
     float getAncho() const;
+    virtual float getScrollX() const;
     const std::vector<Objeto*>& getObjetos() const;
     const std::vector<Obstaculo*>& getObstaculos() const;
     bool huboGolpe() const;

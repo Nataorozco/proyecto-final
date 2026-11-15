@@ -36,6 +36,7 @@ public:
     int getOroRecogido() const;
     void recogerLlave();
     bool getTieneLlave() const;
+    void prepararParaNivel(float nuevaX, float nuevaY);
 
 
 };
