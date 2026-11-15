@@ -2,6 +2,7 @@
 #include <QTransform>
 #include <QTransform>
 #include "nivel.h"
+#include "nivel2.h"
 
 
 static const int ANCHO_NIVEL = 3000;
@@ -160,6 +161,24 @@ void VistaJuego::actualizarJuego()
     setWindowTitle(QString("Atenea en El Dorado - Oro: %1 Llave: %2")
                 .arg(atenea->getOroRecogido())
                .arg(QString(atenea->getTieneLlave() ? "si" : "no")));
+
+    Nivel2 *nivelDos = dynamic_cast<Nivel2*>(nivel);
+    if (nivelDos != nullptr)
+    {
+        setWindowTitle(windowTitle() + QString(" Tiempo: %1").arg(static_cast<int>(nivelDos->getTiempoRestante())));
+        if (nivelDos->tiempoAgotado())
+        {
+            temporalizador->stop();
+            musica->stop();
+            QGraphicsTextItem *mensaje = escena->addText("Tiempo agotado", QFont("Arial", 44, QFont::Bold));
+            mensaje->setDefaultTextColor(Qt::black);
+            mensaje->setPos(nivel->getScrollX() + 400 - mensaje->boundingRect().width()/ 2,
+                225 - mensaje->boundingRect().height()/2);
+            mensaje->setZValue(30);
+            return;
+        }
+    }
+
     if (liana != nullptr)
     {
 
@@ -193,7 +212,7 @@ void VistaJuego::actualizarJuego()
         }
         temporalizador->stop(); // congela el juego
         musica->stop();
-        QGraphicsTextItem *mensaje = escena->addText("¡Nivel 1 completado!", QFont("Arial", 28));
+        QGraphicsTextItem *mensaje = escena->addText("¡Juego completado!", QFont("Arial", 28));
         mensaje->setDefaultTextColor(Qt::black);
         mensaje->setPos(nivel->getScrollX() + 210, 190); // en el centro de lo que se ve
         mensaje->setZValue(30);                          //por encima de todo
@@ -283,6 +302,8 @@ void VistaJuego::cargarNivel2()
     fondo = fondo.scaled(800, 450);
     escena->addPixmap(fondo);
     escena->setSceneRect(0, 0, 800, 450);
+    //aqui agrego el cambio de tamaño de la escena del nivel 2
+    fitInView(escena->sceneRect(), Qt::KeepAspectRatio);
 
     //objetos (oro == pato, llave): misma logica que el nivel1, otra carpeta
     const std::vector<Objeto*>& objetos = nivel->getObjetos();
