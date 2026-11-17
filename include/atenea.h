@@ -16,6 +16,8 @@ private:
     bool tieneLlave;
     float tiempoOro;
     float tiempoLento;
+    float tiempoQuieta;
+    float tiempoImpulso;
 
 public:
     Atenea(float x, float y);
