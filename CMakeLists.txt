@@ -35,6 +35,18 @@ add_executable(AteneaEnElDorado
     include/nivel2.h
     src/juego.cpp
     include/juego.h
+    include/observacion.h
+    include/intento.h
+    include/percepcion.h
+    src/percepcion.cpp
+    include/razonamiento.h
+    src/razonamiento.cpp
+    include/accion
+    src/accion.cpp
+    include/aprendizaje.h
+    src/aprendizaje.cpp
+    include/agenterocas.h
+    src/agenterocas.cpp
 
 )
 
