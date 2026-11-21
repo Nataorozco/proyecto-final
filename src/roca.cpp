@@ -31,6 +31,10 @@ void Roca::aplicarEfecto(Atenea& atenea)
 
 //getter
 bool Roca::haImpactado() const { return impacto; }
+bool Roca::estaActivo() const
+{
+    return !impacto; // una roca deja de estar activa cuando cae
+}
 
 
 // esta nota la dejo aqui para mi: x e y (sin x0) no los declaro:

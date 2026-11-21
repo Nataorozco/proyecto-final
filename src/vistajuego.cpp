@@ -3,7 +3,8 @@
 #include <QTransform>
 #include "nivel.h"
 #include "nivel2.h"
-
+#include "roca.h"
+#include <algorithm>
 
 static const int ANCHO_NIVEL = 3000;
 
@@ -188,12 +189,8 @@ void VistaJuego::actualizarJuego()
         dibujoLiana->setRotation(-angulo);
     }
 
-    const std::vector<Obstaculo*>& obstaculos = nivel->getObstaculos();
-    for (size_t i = 0; i < dibujosObstaculos.size(); i++)
-    {
-        dibujosObstaculos[i]->setPos(obstaculos[i]->getX() - dibujosObstaculos[i] -> pixmap().width() / 2,
-                              obstaculos[i]->getY() - dibujosObstaculos[i]->pixmap().height() / 2);
-    }
+    if (liana == nullptr)   //el nivel1 dibuja su liana aparte
+        sincronizarObstaculos();
 
     contadorAnimacion++;
 
@@ -319,20 +316,51 @@ void VistaJuego::cargarNivel2()
                      objeto->getY() - dibujo.height());
         dibujosObjetos.push_back(item);
     }
-    // Obstaculos (el remolino)
-    const std::vector<Obstaculo*>& obstaculos = nivel->getObstaculos();
-    for (Obstaculo *obstaculo : obstaculos)
-    {
-        QPixmap dibujo = QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-2/remolino.png").scaledToHeight(80);
-        QGraphicsPixmapItem *item = escena->addPixmap(dibujo);
-        item->setPos(obstaculo->getX() - dibujo.width()/ 2,
-                     obstaculo->getY() - dibujo.height()/2);
-        item->setZValue(0.5);
-        dibujosObstaculos.push_back(item);
-    }
+    // Obstaculos (el remolino) NOTA BLOQUE DE AQUI ELIMINADO
 
     dibujoAtenea = escena->addPixmap(spriteDePie);
     dibujoAtenea->setZValue(1);
 }
 
+QPixmap VistaJuego::crearDibujo(const Obstaculo *obstaculo) const
+{
+    if (dynamic_cast<const Roca*>(obstaculo) != nullptr)
+        return QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-2/roca.png").scaledToHeight(40);
+    return QPixmap(QString(RUTA_ASSETS) + "/sprites/nivel-2/remolino.png").scaledToHeight(50);
+}
+void VistaJuego::sincronizarObstaculos()
+{
+    const std::vector<Obstaculo*>& obstaculos = nivel->getObstaculos();
 
+    //crear el dibujo de los obstaculos nuevos y mover todos
+    for (Obstaculo *obstaculo : obstaculos)
+    {
+        QGraphicsPixmapItem *item;
+        auto it = dibujosObstaculos.find(obstaculo);
+        if (it == dibujosObstaculos.end())
+        {
+            item = escena->addPixmap(crearDibujo(obstaculo));
+            item->setZValue(0.5);
+            dibujosObstaculos[obstaculo] = item;
+        }
+        else
+            item = it->second;
+
+        item->setPos(obstaculo->getX() - item->pixmap().width()/2,
+                     obstaculo->getY() - item->pixmap().height()/2);
+    }
+
+    // quitar los dibujos de los obstaculos que ya no existen
+    for (auto it = dibujosObstaculos.begin(); it != dibujosObstaculos.end();)
+    {
+        bool existe = std::find(obstaculos.begin(), obstaculos.end(), it->first) != obstaculos.end();
+        if (!existe)
+        {
+            escena->removeItem(it->second);
+            delete it->second;
+            it = dibujosObstaculos.erase(it);
+        }
+        else
+            ++it;
+    }
+}

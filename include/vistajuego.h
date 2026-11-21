@@ -16,6 +16,9 @@
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include "juego.h"
+#include <map>
+
+class Obstaculo;
 
 class VistaJuego :public QGraphicsView
 {
@@ -49,10 +52,12 @@ private:
     int contadorAnimacion;
     bool mirandoDerecha;
     void cargarNivel2();
+    void sincronizarObstaculos ();
+    QPixmap crearDibujo(const Obstaculo *obstaculo) const;
 
     Nivel *nivel;
     std::vector<QGraphicsPixmapItem*> dibujosObjetos;
-    std::vector<QGraphicsPixmapItem*> dibujosObstaculos;
+    std::map<const Obstaculo*, QGraphicsPixmapItem*> dibujosObstaculos;
     Enredadera *liana;
     QGraphicsPixmapItem *dibujoLiana;
 

@@ -10,6 +10,7 @@ public:
 
     void actualizar(float t) override;
     bool haImpactado() const;
+    bool estaActivo() const override;
     void aplicarEfecto(Atenea& atenea) override;
 
 

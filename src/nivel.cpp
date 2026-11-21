@@ -43,6 +43,21 @@ void Nivel::revisarColisiones()
     }
 }
 
+void Nivel::retirarInactivos()
+{
+    size_t i = 0;
+    while (i < obstaculos.size())
+    {
+        if(!obstaculos[i]->estaActivo())
+        {
+            delete obstaculos[i];
+            obstaculos.erase(obstaculos.begin() + i);
+        }
+        else
+            i++;
+    }
+}
+
 bool Nivel::estaCompletado() const { return completado; }
 float Nivel::getAncho() const { return ancho; }
 const std::vector<Objeto*>& Nivel::getObjetos() const { return objetos; }

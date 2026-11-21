@@ -25,6 +25,7 @@ public:
 protected:
     void revisarObjetos();
     void revisarColisiones();
+    void retirarInactivos();
 
     std::vector<Obstaculo*> obstaculos;
     std::vector<Objeto*> objetos;

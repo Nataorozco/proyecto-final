@@ -4,7 +4,7 @@
 //aqui uso <cmath> para cos y sin
 
 Remolino::Remolino(float cx, float cy, float radio, float omega)
-    :Obstaculo(cx + radio, cy, 60.0f, 60.0f),
+    :Obstaculo(cx + radio, cy, 50.0f, 50.0f),
     cx(cx), cy(cy), radio(radio), omega(omega)
 {
 
