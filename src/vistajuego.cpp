@@ -5,10 +5,12 @@
 #include "nivel2.h"
 #include "roca.h"
 #include <algorithm>
+#include "dificultad.h"
 
 static const int ANCHO_NIVEL = 3000;
 
-VistaJuego::VistaJuego()
+VistaJuego::VistaJuego(const ConfiguracionDificultad& config, QWidget *parent)
+    : QGraphicsView(parent)
 {
     escena = new QGraphicsScene(this);
     setScene(escena);
@@ -29,7 +31,7 @@ VistaJuego::VistaJuego()
         trozo->setPos(i * fondo.width(), 0);
     }
     escena->setSceneRect(0, 0, ANCHO_NIVEL, 450);
-    juego = new Juego();
+    juego = new Juego(config);
     atenea = juego->getAtenea();
     nivel = juego->getNivelActual();
     Nivel1 *nivel1 = dynamic_cast<Nivel1*>(nivel);

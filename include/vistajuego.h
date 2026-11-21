@@ -18,14 +18,17 @@
 #include "juego.h"
 #include <map>
 
+
+class juego;
 class Obstaculo;
+struct ConfiguracionDificultad;
 
 class VistaJuego :public QGraphicsView
 {
     Q_OBJECT
 
 public:
-    VistaJuego();
+    VistaJuego(const ConfiguracionDificultad& config, QWidget *parent = nullptr);
     ~VistaJuego();
 private:
     QSoundEffect *sonidoOro;

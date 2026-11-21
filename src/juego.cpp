@@ -2,15 +2,16 @@
 #include "atenea.h"
 #include "nivel1.h"
 #include "nivel2.h"
+#include "dificultad.h"
 
 //constructor crea a Atenea y a los dos niveles. El vector guarda Nivel* asi que Nivel1*
 //y Nivel2* entran como Nivel*
 
-Juego::Juego()
+Juego::Juego(const ConfiguracionDificultad& config)
     : atenea(new Atenea(100.0f, 400.0f)), nivelActual(0)
 {
     niveles.push_back(new Nivel1(atenea));
-    niveles.push_back(new Nivel2(atenea));
+    niveles.push_back(new Nivel2(atenea, config));
 }
 
 //destructor quien destruye primero los niveles luego a Atenea:

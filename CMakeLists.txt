@@ -47,6 +47,9 @@ add_executable(AteneaEnElDorado
     src/aprendizaje.cpp
     include/agenterocas.h
     src/agenterocas.cpp
+    include/dificultad.h
+    include/tabladificultad.h
+    src/tabladificultad.cpp
 
 )
 

@@ -2,17 +2,19 @@
 #include "atenea.h"
 #include "agenterocas.h"
 #include "roca.h"
-
+#include "dificultad.h"
 //el constructor llama al de la base con el ancho 800 y crea lo que hay en el nivel
 
-Nivel2::Nivel2(Atenea *atenea)
-    : Nivel(atenea, 800.0f), tiempo(0.0f), tiempoRestante(60.0f), agente(new AgenteRocas(2.5f, 150.0f, 0.0f, 0.3f))
+Nivel2::Nivel2(Atenea *atenea, const ConfiguracionDificultad& config)
+    : Nivel(atenea, 800.0f), tiempo(0.0f), tiempoRestante(60.0f),
+    agente(new AgenteRocas(config.intervaloRocas, config.velocidadRocas,
+                           config.adelantoInicial, config.tasaAprendizaje))
 
 {
     objetos.push_back(new Objeto(150.0f, 400.0f, TipoObjeto::Oro));
     objetos.push_back(new Objeto(700.0f, 400.0f, TipoObjeto::Llave));
 
-    obstaculos.push_back(new Remolino(400.0f, 300.0f, 100.0f, 1.5f));
+    obstaculos.push_back(new Remolino(400.0f, 300.0f, 100.0f, config.omegaRemolino));
 }
 
 Nivel2::~Nivel2()

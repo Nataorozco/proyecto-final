@@ -5,11 +5,12 @@
 
 class Atenea;
 class Nivel;
+struct ConfiguracionDificultad;
 
 class Juego
 {
 public:
-    Juego();
+    Juego(const ConfiguracionDificultad& config);
     ~Juego();
 
     void actualizar(float dt);

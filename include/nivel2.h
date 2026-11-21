@@ -4,11 +4,13 @@
 #include "nivel.h"
 #include "remolino.h"
 
+struct ConfiguracionDificultad; //nueva
+
 class AgenteRocas;
 class Nivel2 : public Nivel
 {
 public:
-    Nivel2(Atenea *atenea);
+    Nivel2(Atenea *atenea, const ConfiguracionDificultad& config);  //linea nueva hoy desde const
 
     void actualizar(float dt) override;
     bool tiempoAgotado() const;
