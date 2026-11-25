@@ -1,0 +1,46 @@
+#pragma once
+
+enum class Estado { DePie, Caminando, Agachada, Saltando };
+enum class Direccion { Izquierda, Derecha };
+
+class Atenea
+{
+
+private:
+    float x;
+    float y;
+    float velocidad;
+    float velocidadY;
+    Estado estado;
+    int oroRecogido;
+    bool tieneLlave;
+    float tiempoOro;
+    float tiempoLento;
+    float tiempoQuieta;
+    float tiempoImpulso;
+
+public:
+    Atenea(float x, float y);
+
+    void mover(Direccion direccion);
+    void saltar();
+    void agacharse();
+    void levantarse();
+    void recogerOro();
+    void limitarX(float minimo, float maximo);
+    void actualizar(float dt);
+    void ralentizar(float segundos);
+    void empujar(float dx);
+
+    float getX() const;
+    float getY() const;
+    Estado getEstado() const;
+    int getOroRecogido() const;
+    void recogerLlave();
+    bool getTieneLlave() const;
+    void prepararParaNivel(float nuevaX, float nuevaY);
+
+
+};
+
+
