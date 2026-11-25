@@ -54,4 +54,6 @@ add_executable(AteneaEnElDorado
 )
 
 target_link_libraries(AteneaEnElDorado PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Multimedia)
-target_compile_definitions(AteneaEnElDorado PRIVATE RUTA_ASSETS="${CMAKE_SOURCE_DIR}/assets")
+add_custom_command(TARGET AteneaEnElDorado POST_BUILD
+COMMAND ${CMAKE_COMMAND} -E copy_directory
+${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:AteneaEnElDorado>/assets)
