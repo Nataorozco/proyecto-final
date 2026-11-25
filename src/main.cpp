@@ -4,6 +4,9 @@
 #include <QInputDialog>
 #include <QStringList>
 #include <vector>
+#include <QMessageBox>
+#include <exception>
+#include "dificultad.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,10 +32,21 @@ int main(int argc, char *argv[])
 
     int indice = nombres.indexOf(elegido);
 
-    VistaJuego vista(tabla.obtener(claves[indice]));
-    vista.setWindowTitle("Atenea en El Dorado");
-    vista.show();
+    try
+    {
+        VistaJuego vista(tabla.obtener(claves[indice]));
+        vista.setWindowTitle("Atenea en El Dorado");
+        vista.show();
+        return app.exec();
+    }
+    catch (const std::exception& e)
 
-    return app.exec();
+    {
+
+        QMessageBox::critical(nullptr, "Atenea en El Dorado ",
+                              QString("No se pudo iniciar el juego:\n") + e.what());
+
+    return 1;
+    }
 }
 
