@@ -6,6 +6,8 @@
 #include "roca.h"
 #include <algorithm>
 #include "dificultad.h"
+#include <QCoreApplication>
+#define RUTA_ASSETS (QCoreApplication::applicationDirPath() + "/assets")
 
 static const int ANCHO_NIVEL = 3000;
 
