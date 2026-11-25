@@ -5,7 +5,7 @@ static const float GRAVEDAD = 0.5f;      // cuanto aumenta la velocidad hacia ab
 static const float FUERZA_SALTO = -10.0f; // negativo = hacia arriba (en pantalla y crece hacia abajo)
 static const float SUELO_Y = 400.0f;// altura del suelo (temporal, luego la dara el nivel)
 static const float DURACION_ORO = 5.0f;
-static const float FACTOR_LENTO = 0.1f;
+static const float FACTOR_LENTO = 0.2f;
 static const float FACTOR_QUIETA = 1.5f; //segundos quieta para ganar el impulso
 static const float DURACION_IMPULSO = 2.0f; //cuanto dura el impulso
 static const float FACTOR_IMPULSO = 1.5f; //multiplica la velocidad
